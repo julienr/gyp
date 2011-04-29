@@ -83,6 +83,11 @@ rule copy
   'cxx': os.environ.get('CXX', 'g++'),
 }
 
+def StripPrefix(arg, prefix):
+  if arg.startswith(prefix):
+    return arg[len(prefix):]
+  return arg
+
 def QuoteShellArgument(arg):
   return "'" + arg.replace("'", "'" + '"\'"' + "'")  + "'"
 
@@ -105,8 +110,12 @@ class NinjaWriter:
     return os.path.normpath(os.path.join(self.base_dir, path))
 
   def OutputPath(self, path):
-    if path.startswith('$'):
-      return path
+    path = StripPrefix(path,
+                       generator_default_variables['SHARED_INTERMEDIATE_DIR'])
+    path = StripPrefix(path,
+                       generator_default_variables['INTERMEDIATE_DIR'])
+    path = StripPrefix(path, '/')
+    assert not path.startswith('$')
     return os.path.normpath(os.path.join('$b/obj', self.name, self.base_dir, path))
 
   def StampPath(self, name):
