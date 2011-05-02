@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright (c) 2009 Google Inc. All rights reserved.
+# Copyright (c) 2011 Google Inc. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
@@ -260,7 +260,11 @@ define do_cmd
 $(if $(or $(command_changed),$(prereq_changed)),
   @$(call exact_echo,  $($(quiet)cmd_$(1)))
   @mkdir -p $(dir $@) $(dir $(depfile))
-  @$(cmd_$(1))
+  $(if $(findstring flock,$(word 1,$(cmd_$1))),
+    @$(cmd_$(1))
+    @echo "  $(quiet_cmd_$(1)): Finished",
+    @$(cmd_$(1))
+  )
   @$(call exact_echo,$(call escape_vars,cmd_$@ := $(cmd_$(1)))) > $(depfile)
   @$(if $(2),$(fixup_dep))
 )
@@ -1247,7 +1251,7 @@ def RunSystemTests():
     # don't even use flock when linking in the cross-compile setup!
     # TODO(evan): refactor cross-compilation such that this code can
     # be reused.
-    link_flags = '-Wl,--threads --Wl,--thread-count=4'
+    link_flags = '-Wl,--threads -Wl,--thread-count=4'
 
   # TODO(evan): cache this output.  (But then we'll need to add extra
   # flags to gyp to flush the cache, yuk!  It's fast enough for now to
