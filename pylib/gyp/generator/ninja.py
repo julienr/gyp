@@ -61,7 +61,7 @@ rule alink
 rule solink
   description = SOLINK $out
   command = g++ -shared $ldflags -o $out -Wl,-soname=$soname \\
-    -Wl,--whole-archive $in -Wl,--no-whole-archive $libs
+    -Wl,--start-group $in -Wl,--end-group $libs
 
 rule link
   description = LINK $out
