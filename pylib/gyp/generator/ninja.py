@@ -360,12 +360,15 @@ class NinjaWriter:
     output = self.ComputeOutput(spec)
 
     if 'dependencies' in spec:
-      extra_deps = set()
-      for dep in spec['dependencies']:
-        input, linkable = self.target_outputs.get(dep, (None, False))
-        if input and linkable:
-          extra_deps.add(input)
-      final_deps.extend(list(extra_deps))
+      # Add all linkable outputs of our dependencies to the link line
+      # for targets where we're linking.
+      if spec['type'] in ('executable', 'loadable_module', 'shared_library'):
+        extra_deps = set()
+        for dep in spec['dependencies']:
+          input, linkable = self.target_outputs.get(dep, (None, False))
+          if input and linkable:
+            extra_deps.add(input)
+        final_deps.extend(list(extra_deps))
     command_map = {
       'executable':      'link',
       'static_library':  'alink',
