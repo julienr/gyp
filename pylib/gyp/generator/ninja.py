@@ -45,13 +45,13 @@ cxx = %(cxx)s
 rule cc
   depfile = $out.d
   description = CC $out
-  command = $cc -MMD -MF $out.d $defines $includes $cflags $cflags_cc \\
+  command = $cc -MMD -MF $out.d $defines $includes $cflags $cflags_cc $
     -c $in -o $out
 
 rule cxx
   depfile = $out.d
   description = CXX $out
-  command = $cxx -MMD -MF $out.d $defines $includes $cflags $cflags_cxx \\
+  command = $cxx -MMD -MF $out.d $defines $includes $cflags $cflags_cxx $
     -c $in -o $out
 
 rule alink
@@ -60,12 +60,12 @@ rule alink
 
 rule solink
   description = SOLINK $out
-  command = g++ -shared $ldflags -o $out -Wl,-soname=$soname \\
+  command = g++ -shared $ldflags -o $out -Wl,-soname=$soname $
     -Wl,--whole-archive $in -Wl,--no-whole-archive $libs
 
 rule link
   description = LINK $out
-  command = g++ $ldflags -o $out -Wl,-rpath=$b/lib \\
+  command = g++ $ldflags -o $out -Wl,-rpath=$b/lib $
     -Wl,--start-group $in -Wl,--end-group $libs
 
 rule stamp
