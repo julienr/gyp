@@ -477,7 +477,7 @@ class NinjaWriter:
     for value in values:
       value = quoter(value)
       if col != 0 and col + len(value) >= 78:
-        self.WriteLn(' \\')
+        self.WriteLn(' $')
         self.Write(' ' * 4)
         col = 4
       else:
