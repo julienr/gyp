@@ -511,7 +511,7 @@ def Sourceify(path):
 
 # Map from qualified target to path to output.
 target_outputs = {}
-# Map from qualified target to a list of linkable outputs.  A subset
+# Map from qualified target to any linkable output.  A subset
 # of target_outputs.  E.g. when mybinary depends on liba, we want to
 # include liba in the linker line; when otherbinary depends on
 # mybinary, we just want to build mybinary first.
@@ -620,7 +620,7 @@ class MakefileWriter:
 
     # Update global list of link dependencies.
     if self.type in ('static_library', 'shared_library'):
-      target_link_deps[qualified_target] = [self.output]
+      target_link_deps[qualified_target] = self.output
 
     # Currently any versions have the same effect, but in future the behavior
     # could be different.
@@ -982,7 +982,7 @@ class MakefileWriter:
                    if target_outputs[dep]])
       for dep in spec['dependencies']:
         if dep in target_link_deps:
-          link_deps.extend(target_link_deps[dep])
+          link_deps.append(target_link_deps[dep])
       deps.extend(link_deps)
       # TODO: It seems we need to transitively link in libraries (e.g. -lfoo)?
       # This hack makes it work:
