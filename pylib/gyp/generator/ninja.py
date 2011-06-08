@@ -166,9 +166,8 @@ class NinjaWriter:
 
     # The final output of our target depends on the last output of the
     # above steps.
-    final_deps = link_deps or sources_predepends
-    if self.prebuild_stamp and not final_deps:
-      final_deps = [self.prebuild_stamp]
+    final_deps = link_deps or sources_predepends or [self.prebuild_stamp]
+    final_deps = filter(None, final_deps)
     if not final_deps:
       print 'warning:', self.name, 'missing output dependencies'
     return self.WriteTarget(spec, config, final_deps)
