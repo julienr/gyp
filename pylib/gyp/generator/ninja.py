@@ -393,13 +393,11 @@ class NinjaWriter:
     return output
 
   def ComputeOutputFileName(self, spec):
-    target = spec['target_name']
+    target = spec.get('product_name', spec['target_name'])
 
     # Snip out an extra 'lib' if appropriate.
-    if '_library' in spec['type'] and target[:3] == 'lib':
-      target = target[3:]
-
     if spec['type'] in ('static_library', 'loadable_module', 'shared_library'):
+      target = StripPrefix(target, 'lib')
       prefix = spec.get('product_prefix', 'lib')
 
     if spec['type'] == 'static_library':
@@ -411,15 +409,13 @@ class NinjaWriter:
     elif spec['type'] == 'settings':
       return None
     elif spec['type'] == 'executable':
-      return spec.get('product_name', target)
+      return target
     else:
       raise 'Unhandled output type', spec['type']
 
   def ComputeOutput(self, spec):
     filename = self.ComputeOutputFileName(spec)
 
-    if 'product_name' in spec:
-      print 'XXX ignoring product_name', spec['product_name']
     assert 'product_extension' not in spec
 
     if 'product_dir' in spec:
