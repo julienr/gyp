@@ -496,16 +496,6 @@ def CalculateVariables(default_variables, params):
       gyp.system_test.TestLinkerSupportsICF(cc_command=cc_target)
 
 
-def tput(str):
-  return subprocess.Popen(['tput',str], stdout=subprocess.PIPE).communicate()[0]
-tput_clear = tput('el1')
-import time
-def OverPrint(*args):
-  #sys.stdout.write(tput_clear + '\r' + ' '.join(args))
-  sys.stdout.write(' '.join(args) + '\n')
-  sys.stdout.flush()
-  #time.sleep(0.01)  # XXX
-
 def GenerateOutput(target_list, target_dicts, data, params):
   options = params['options']
   generator_flags = params.get('generator_flags', {})
@@ -525,7 +515,6 @@ def GenerateOutput(target_list, target_dicts, data, params):
   target_outputs = {}
   for qualified_target in target_list:
     # qualified_target is like: third_party/icu/icu.gyp:icui18n#target
-    #OverPrint(qualified_target)
     build_file, target, _ = gyp.common.ParseQualifiedTarget(qualified_target)
 
     build_file = gyp.common.RelativePath(build_file, src_root)
@@ -559,4 +548,3 @@ def GenerateOutput(target_list, target_dicts, data, params):
     print >>master_ninja, 'build all: phony ||' + ' '.join(all_outputs)
 
   master_ninja.close()
-  OverPrint('done.\n')
