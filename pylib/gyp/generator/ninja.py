@@ -116,7 +116,8 @@ class NinjaWriter:
                        generator_default_variables['INTERMEDIATE_DIR'])
     path = StripPrefix(path, '/')
     assert not path.startswith('$')
-    return os.path.normpath(os.path.join('$b/obj', self.name, self.base_dir, path))
+    path_dir, path_filename = os.path.split(path)
+    return os.path.normpath(os.path.join('$b/obj', self.base_dir, path_dir, self.name + '_' + path_filename))
 
   def StampPath(self, name):
     return os.path.join('$b/obj', self.name, name + '.stamp')
