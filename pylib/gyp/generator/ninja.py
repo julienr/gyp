@@ -60,13 +60,13 @@ rule alink
 
 rule solink
   description = SOLINK $out
-  command = g++ -Wl,--threads -Wl,--thread-count=4 $
+  command = g++ $
     -shared $ldflags -o $out -Wl,-soname=$soname $
     -Wl,--whole-archive $in -Wl,--no-whole-archive $libs
 
 rule link
   description = LINK $out
-  command = g++ -Wl,--threads -Wl,--thread-count=4 $
+  command = g++ $
     $ldflags -o $out -Wl,-rpath=$b/lib $
     -Wl,--start-group $in -Wl,--end-group $libs
 
